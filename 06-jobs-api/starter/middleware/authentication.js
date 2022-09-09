@@ -6,7 +6,7 @@ const { UnauthenticatedError } = require('../errors');
 const auth = (req, res, next) => {
     // check header
     const authHeader = req.headers.authorization;
-    if(!authHeader || !authHeader.startWith('Bearer ')) {
+    if(!authHeader || !authHeader.startsWith('Bearer ')) {
         throw new UnauthenticatedError('Authentication invalid');
     }
 
@@ -15,7 +15,8 @@ const auth = (req, res, next) => {
     try{
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         // ATTACH THE USER TO THE JOB ROUTES
-        req.user = {userId: payload.userId, name:payload.name}
+        req.user = { userId: payload.userId, name:payload.name }
+        next()
     }catch(error) {
         throw new UnauthenticatedError('Authentication invalid');
     }
